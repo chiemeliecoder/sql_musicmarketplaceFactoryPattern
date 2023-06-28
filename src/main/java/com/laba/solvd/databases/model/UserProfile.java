@@ -26,6 +26,8 @@ public class UserProfile {
 
   }
 
+
+
   public Integer getId() {
     return id;
   }

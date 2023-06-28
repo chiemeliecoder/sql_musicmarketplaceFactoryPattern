@@ -2,6 +2,8 @@ package com.laba.solvd.databases.dao;
 
 import com.laba.solvd.databases.configurations.ConnectionPool;
 import com.laba.solvd.databases.interfacedao.IWishlistDAO;
+import com.laba.solvd.databases.model.Album;
+import com.laba.solvd.databases.model.User;
 import com.laba.solvd.databases.model.Wishlist;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,6 +22,7 @@ public class WishlistDAO implements IWishlistDAO {
 
   private static final ConnectionPool CONNECTION_POOL = ConnectionPool.getInstance();
   private static final String DELETE = "DELETE FROM Wishlists WHERE id=?";
+  private static final String UPDATE = "UPDATE Wishlists SET name =?, userid=?  WHERE id=?";
 
   public Wishlist getById(int id) throws SQLException {
 
@@ -146,6 +149,32 @@ public class WishlistDAO implements IWishlistDAO {
 
   @Override
   public void update(Wishlist entity) {
+    Connection connection = CONNECTION_POOL.getConnectionFromPool();
+
+    if(entity == null){
+      throw new NullPointerException();
+    }
+
+    User user = entity.getUser();
+    if (user == null) {
+      throw new IllegalArgumentException("User associated with the wishlist cannot be null");
+    }
+    try(PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)){
+//      preparedStatement.setInt(1, entity.getId());
+//      preparedStatement.setString(2, entity.getName());
+//      preparedStatement.setInt(3, user.getId());
+
+      preparedStatement.setString(1, entity.getName());
+      preparedStatement.setInt(2, entity.getUser().getId());
+      preparedStatement.setInt(3, entity.getId());
+
+
+      preparedStatement.executeUpdate();
+    } catch (SQLException e) {
+      throw new RuntimeException("unable to update album", e);
+    }finally {
+      CONNECTION_POOL.releaseConnectionToPool(connection);
+    }
 
   }
 

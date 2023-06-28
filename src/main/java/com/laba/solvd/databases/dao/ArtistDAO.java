@@ -252,6 +252,8 @@ public class ArtistDAO implements IArtistDAO {
       Album album = new Album();
       Integer albumId = album.getId();
       preparedStatement.setInt(3, albumId);
+
+
       preparedStatement.executeUpdate();
     } catch (SQLException e) {
       throw new RuntimeException("unable to update album", e);

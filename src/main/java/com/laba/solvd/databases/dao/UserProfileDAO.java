@@ -87,7 +87,7 @@ public class UserProfileDAO implements IUserProfileDAO {
     Connection connection = CONNECTION_POOL.getConnectionFromPool();
     try(PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO user_profile (id, bio, profileimage, location) VALUES (?, ?, ?, ?)",
         Statement.RETURN_GENERATED_KEYS)){
-      //preparedStatement.setInt(1, user.getId());
+      preparedStatement.setInt(1, user.getId());
       preparedStatement.setString(2, user.getBio());
       preparedStatement.setString(3, user.getProfileimage());
       preparedStatement.setString(4, user.getLocation());
@@ -100,7 +100,7 @@ public class UserProfileDAO implements IUserProfileDAO {
       }
 
     }catch(SQLException e){
-      throw new RuntimeException("unable to create user", e);
+      throw new RuntimeException("unable to create user profile", e);
     }finally {
       CONNECTION_POOL.releaseConnectionToPool(connection);
     }
@@ -136,6 +136,8 @@ public class UserProfileDAO implements IUserProfileDAO {
   public List<UserProfile> getUsersWithBioContaining(String keyword) {
     return null;
   }
+
+
 
   public int getMaxUserProfId() {
     // Add the necessary logic to retrieve the maximum user ID from the database

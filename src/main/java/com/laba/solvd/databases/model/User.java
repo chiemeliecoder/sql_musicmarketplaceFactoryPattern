@@ -38,6 +38,8 @@ public class User {
     this.wishlistList = wishlistList;
   }
 
+
+
   public Integer getId() {
     if (id == null) {
       return null;
