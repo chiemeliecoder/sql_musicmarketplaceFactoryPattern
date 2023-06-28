@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laba.solvd.databases.interfacedao.IWishlistDAO">
+  <!-- Result Map for Wishlist -->
+  <resultMap id="WishlistResultMap" type="com.laba.solvd.databases.model.Wishlist">
+    <id property="id" column="id" />
+    <result property="name" column="name" />
+    <collection property="albumList" ofType="com.laba.solvd.databases.model.Album">
+      <id property="id" column="id" />
+      <result property="albumName" column="title" />
+      <result property="albumDate" column="date" />
+    </collection>
+  </resultMap>
+
+  <!-- Select Wishlist by ID -->
+  <select id="getById" parameterType="int" resultMap="WishlistResultMap">
+    SELECT id, name
+    FROM wishlists
+    WHERE id = #{id}
+  </select>
+
+  <!-- Insert Wishlist -->
+  <insert id="create" parameterType="com.laba.solvd.databases.model.Wishlist">
+    INSERT INTO wishlists (id, name, userid) -- Add 'userid' column
+    VALUES (#{id}, #{name}, #{user.id}) -- Add 'userId' parameter
+  </insert>
+
+  <!-- Update Wishlist -->
+  <update id="update" parameterType="com.laba.solvd.databases.model.Wishlist">
+    UPDATE wishlists
+    SET name = #{name}
+    WHERE id = #{id}
+  </update>
+
+  <!-- Delete Wishlist by ID -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM wishlists WHERE id = #{id}
+  </delete>
+
+  <!-- Select All Wishlists -->
+  <select id="getAll" resultMap="WishlistResultMap">
+    SELECT id, name
+    FROM wishlists
+  </select>
+
+  <!-- Custom SQL Query to Retrieve Wishlist with Complex Join -->
+  <select id="getWishlist" parameterType="int" resultMap="WishlistResultMap">
+    SELECT w.id, w.name
+    FROM wishlists AS w
+           JOIN albums AS aw ON aw.wishlistid = w.id
+    WHERE w.id = #{wishlistId}
+  </select>
+
+</mapper>

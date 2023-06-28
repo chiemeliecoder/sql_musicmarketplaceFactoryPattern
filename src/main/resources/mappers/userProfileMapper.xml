@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.laba.solvd.databases.interfacedao.IUserProfileDAO">
+
+  <resultMap id="UserProfileResultMap" type="com.laba.solvd.databases.model.UserProfile">
+    <id property="id" column="id" />
+    <result property="bio" column="bio" />
+    <result property="profileimage" column="profileimage" />
+    <result property="location" column="location" />
+  </resultMap>
+
+  <!-- Select UserProfile by ID -->
+  <select id="getUserProfileById" parameterType="int" resultMap="UserProfileResultMap">
+    SELECT * FROM user_profile WHERE id = #{userId}
+  </select>
+
+  <!-- Insert UserProfile -->
+  <insert id="createUser" parameterType="com.laba.solvd.databases.model.UserProfile">
+    INSERT INTO user_profile (id, bio, profileimage, location) VALUES (#{id}, #{bio}, #{profileimage}, #{location})
+  </insert>
+
+  <!-- Select all UserProfiles -->
+  <select id="getAllUsersProfiles" resultMap="UserProfileResultMap">
+    SELECT * FROM user_profile
+  </select>
+
+  <select id="getAllUsers" resultMap="UserProfileResultMap">
+    SELECT u.id AS user_id, u.username, up.bio AS user_bio
+    FROM user u
+           JOIN user_profile up ON u.userprofid = up.id
+  </select>
+
+  <!-- Complex SQL query -->
+  <select id="getUsersWithBioContaining" parameterType="String" resultMap="UserProfileResultMap">
+    SELECT * FROM user_profile WHERE bio LIKE CONCAT('%', #{keyword}, '%')
+  </select>
+
+</mapper>
